@@ -14,18 +14,18 @@ export async function getZaprosFunction(url = "", type = "category", arrCatalogs
 }
 
 
-export async function getZapros(url = "", type = "category", arrCatalogs = []) {
+export async function getZapros(url = "", type = "", arrCatalogs = [], rand = '', limit = '') {
 
-
-    const urlSearch = url + allDataSearch(type, arrCatalogs)
-    // console.log(urlSearch);
+    console.log(type)
+    const urlSearch = url + allDataSearch(type, arrCatalogs) + rand + '/' + limit;
+    console.log(urlSearch)
     let response = await fetch(urlSearch)
     // .then(response => response.json())
     // .then(data => {
     //     console.log(data)
     // })
-
-    return response.json()
+    // response.json().then(data => console.log(data))
+    return response.json();
     // fetch(urlSearch)
     //     .then(response => response.json())
     //     .then(data => {
@@ -36,9 +36,12 @@ export async function getZapros(url = "", type = "category", arrCatalogs = []) {
     //         return _data;
     //     })
 }
+
 export async function getZaprosAll(url = "", data = "") {
     if (data === "") return {};
     const urlSearch = url + 'filter=' + data
+    // const urlSearch = url + 'filter=' + data + '/limit=20'
+
     console.log(urlSearch);
     let response = await fetch(urlSearch)
     // .then(response => response.json())
@@ -59,7 +62,7 @@ export async function getZaprosAll(url = "", data = "") {
 }
 
 // async function getZapros() {
-//     let rez = await fetch(urlJsonServer)
+//     let rez = await fetch(urlJsonServer + 'shop/')
 //     rez = rez.json();
 //     // rez = transformData(rez);
 //     return rez;
@@ -68,33 +71,36 @@ export async function getZaprosAll(url = "", data = "") {
 
 // *******************************************************
 export function transformData(data) {
+    console.log('TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT')
+    console.log(data)
+    if (!data.message) {
 
-    let dataObject = data.map(e => {
-        const _e = Object.assign({}, e);
-        if (typeof e.category === 'string') _e.catalog = e.category.split(" ");
-        if (typeof _e.images === 'string') _e.images = JSON.parse(_e.images);
-        if (typeof e.parameters === 'string') JSON.parse(e.parameters).forEach(p => {
-            const temp = Object.entries(p);
-            _e[temp[0][0]] = temp[0][1];
-        });
-        delete _e.parameters;
-        delete _e.category;
-        return _e;
-    })
-    return dataObject;
+        const dataObject = data.map((e, i) => {
+            const _e = Object.assign({}, e);
+            // if (typeof e.category === 'string') _e.catalog = e.category.split(" ");
+            if (typeof _e.images === 'string') _e.images = JSON.parse(_e.images);
+            if (typeof e.parameters === 'string') JSON.parse(e.parameters).forEach(p => {
+                const temp = Object.entries(p);
+                _e[temp[0][0]] = temp[0][1];
+            });
+            delete _e.temp;
+            // delete _e.category;
+            return _e;
+        })
+
+        return dataObject;
+    } else return false;
+
 }
 // console.log(dataObject);
 
 // *******************************************************
 
 export function allDataSearch(type = "", data = []) {
-
+    console.log(data)
     let stringSearch = "";
     data.forEach(e => {
-        stringSearch += `filter-${type}=${e}/`;
+        e && (stringSearch += `${type !== '' ? `filter-${type}=` : ''}${e}/`);
     })
-
     return stringSearch;
 }
-
-// console.log(allDataSearch('category', ['Для_тварин', 'Собаки', 'Нашийники']))

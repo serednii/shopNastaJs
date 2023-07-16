@@ -1,26 +1,25 @@
 import { PRODUCTHTML } from "../GlobalVariable";
 // ***************************************************************************
-function printCard(data, count, clases) {
+function printCard(objectData, catalogs, clases) {
     const cartListWrapper = document.querySelector(clases);
-    console.log(cartListWrapper);
+    console.log('5555555555555555555555555555555555555555555555555555555555555555555555555555555555');
+
     console.log(clases);
-    console.log(data);
-    console.log(count);
 
     if (!cartListWrapper) return
-    const elements = cartListWrapper.querySelectorAll('.catalog_product-grid_cart');
-    if (elements) elements.forEach(e => e.remove());//якщо є картки то видаляємо
-
-    for (let a = 0; a < ((data.length) > count ? count : (data.length)); a++) {
-        let i = a;
-        console.log(count);
+    // const elements = cartListWrapper.querySelectorAll('.catalog_product-grid_cart');
+    // if (elements) elements.forEach(e => e.remove());//якщо є картки то видаляємо
+    cartListWrapper.innerHTML = '';
+    cartListWrapper.dataset.catalogs = catalogs.join(' ');
+    objectData && objectData.forEach(el => {
 
         const cartItemHTML = `<li class="catalog_product-grid_cart collect_data data-catalog-level" 
-            data-catalog_00="${data[i].catalog[0]}" 
-            data-catalog_01="${data[i].catalog[1]}"  
-            data-catalog_02="${data[i].catalog[2]}" 
+            data-catalogs="${el.category}" 
+            data-rating="${el.rating}"
+            data-sales="${el.sales}"
+            data-price="${el.newPrice}"
             data-level_catalog="1000"
-            data-id="${data[i].id}"
+            data-id="${el.id}"
             >
                 <div class="catalog_product-grid_cart-box"></div>
 
@@ -36,12 +35,12 @@ function printCard(data, count, clases) {
                 </div>
 
                 <a href="${PRODUCTHTML}" class="catalog_product__picture">
-                    <img class="picture_1 product-img" src="${data[i].images[1].img}"
-                        alt="${data[i].images[1].alt}">
+                    <img class="picture_1 product-img" src="${el.images[1].img}"
+                        alt="${el.images[1].alt}">
                 </a>
                 <div class="catalog_product_content">
                     <a href="${PRODUCTHTML}" class="catalog_product-name--link">
-                        ${data[i].title}
+                        ${el.title}
                     </a>
 
                     <div class="catalog_product__rating">
@@ -74,12 +73,17 @@ function printCard(data, count, clases) {
                         </a>
                     </div>
                     <div class="catalog_product-prices">
-                        
-                    ${data[i].oldPrice !== 'null' ? `<div class="catalog_product-price--old">${data[i].oldPrice}<span
+                    <div class="catalog_product-rating-sales">
+                    
+                    <span class="catalog_product-rating">Рейтінг ${el.rating}</span>
+                    <span class="catalog_product-sales">Продано ${el.sales}</span>
+
+                    </div>
+                    ${el.oldPrice !== 'null' ? `<div class="catalog_product-price--old">${el.oldPrice}<span
                                 class="goods-tile__price-currency">₴</span></div>`: ""}
 
-                         <div class="catalog_product-price--red ${data[i].oldPrice === 'null' ? "black-color" : ""}">
-                            <p><span class="catalog_product-price-value cena">${data[i].newPrice}</span>
+                         <div class="catalog_product-price--red ${el.oldPrice === 'null' ? "black-color" : ""}">
+                            <p><span class="catalog_product-price-value cena">${el.newPrice}</span>
                                 <span class="catalog_product-price-currency">₴</span>
                             </p>
                         </div>
@@ -95,8 +99,13 @@ function printCard(data, count, clases) {
             </li>
         `
         if (cartListWrapper) cartListWrapper.insertAdjacentHTML('beforeend', cartItemHTML);
-    }
+    });
 }
 // ***************************************************************************
 
 export default printCard;
+
+
+// data-catalog_00="${el.catalog[0]}"
+// data-catalog_01="${el.catalog[1]}"
+// data-catalog_02="${el.catalog[2]}" 

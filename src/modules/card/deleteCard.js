@@ -18,7 +18,7 @@ function deleteCard(btn, classs) {
     const dataIdTemp = btn.closest('.cart_list__list-ware').dataset.id;
     console.log(dataIdTemp)
 
-    console.log(document.querySelector(`[data-id="${dataIdTemp}"]`).querySelector('[data-btn_card]').innerText = "Remove to cart")
+    // console.log(document.querySelector(`[data-id="${dataIdTemp}"]`).querySelector('[data-btn_card]').innerText = "Remove to cart")
     classs === '.cart_list__cart' && document.querySelector(`[data-id="${dataIdTemp}"]`) &&
         document.querySelector(`[data-id="${dataIdTemp}"]`).querySelector('[data-btn_card]') &&
         (document.querySelector(`[data-id="${dataIdTemp}"]`).querySelector('[data-btn_card]').innerText = "Add to cart")

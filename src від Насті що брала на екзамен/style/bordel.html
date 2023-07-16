@@ -1,0 +1,83 @@
+<!-- <div class="resize ">
+        <p>windows</p>
+        <span>Width = </span><span id="SpanID1"></span>
+        <br />
+        <span>Height = </span><span id="SpanID2"></span>
+
+        <p>elements</p>
+        <span>Width = </span><span id="SpanID3"></span>
+        <br />
+        <span>Height = </span><span id="SpanID4"></span>
+        <!-- <input type="range"> -->
+
+<!-- </div> --> -->
+
+<!-- <div class="range-slider flat" data-ticks-position='top'
+        style='--min:-500; --max:500; --value-a:-220; --value-b:400; --suffix:"$"; --text-value-a:"-220"; --text-value-b:"400";'>
+        <input type="range" min="-500" max="500" value="-220"
+            oninput="this.parentNode.style.setProperty('--value-a',this.value); this.parentNode.style.setProperty('--text-value-a', JSON.stringify(this.value))">
+        <output></output>
+        <input type="range" min="-500" max="500" value="400"
+            oninput="this.parentNode.style.setProperty('--value-b',this.value); this.parentNode.style.setProperty('--text-value-b', JSON.stringify(this.value))">
+        <output></output>
+        <div class='range-slider__progress'></div>
+    </div> -->
+
+
+
+
+<!-- star -->
+<div>
+    <svg style="width: 0; height: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+        <defs>
+            <mask id="half">
+                <rect x="0" y="0" width="32" height="32" fill="white" />
+                <rect x="50%" y="0" width="32" height="32" fill="grey" />
+            </mask>
+
+            <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="star">
+                <path
+                    d="M31.547 12a.848.848 0 00-.677-.577l-9.427-1.376-4.224-8.532a.847.847 0 00-1.516 0l-4.218 8.534-9.427 1.355a.847.847 0 00-.467 1.467l6.823 6.664-1.612 9.375a.847.847 0 001.23.893l8.428-4.434 8.432 4.432a.847.847 0 001.229-.894l-1.615-9.373 6.822-6.665a.845.845 0 00.214-.869z" />
+            </symbol>
+        </defs>
+    </svg>
+</div>
+<!-- https://codepen.io/shadeed/pen/bGWyoXW -->
+
+<p class="star-rating" aria-label="4.5 stars out of 5">
+    <svg class="c-star active" width="32" height="32" viewBox="0 0 32 32">
+        <use xlink:href="#star"></use>
+    </svg>
+    <svg class="c-star active" width="32" height="32" viewBox="0 0 32 32">
+        <use xlink:href="#star"></use>
+    </svg>
+    <svg class="c-star active" width="32" height="32" viewBox="0 0 32 32">
+        <use xlink:href="#star"></use>
+    </svg>
+    <svg class="c-star active" width="32" height="32" viewBox="0 0 32 32">
+        <use xlink:href="#star"></use>
+    </svg>
+    <svg class="c-star active" width="32" height="32" viewBox="0 0 32 32">
+        <use xlink:href="#star" mask=url("#half")></use>
+    </svg>
+</p>
+
+
+<div class="container">
+    <div class="container__wrapper">
+
+
+        <!-- Випадаюче меню -->
+        <div class="hover_maim_menu">
+
+            <!-- <div class="menu_circle_close">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M14 25.6666C20.4433 25.6666 25.6667 20.4432 25.6667 13.9999C25.6667 7.5566 20.4433 2.33325 14 2.33325C7.55668 2.33325 2.33334 7.5566 2.33334 13.9999C2.33334 20.4432 7.55668 25.6666 14 25.6666Z"
+                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M17.5 10.5L10.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M10.5 10.5L17.5 17.5" stroke="white" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div> -->

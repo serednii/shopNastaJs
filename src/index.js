@@ -5,6 +5,8 @@ require('jquery-form-styler');
 
 import './modules/slider';
 import './modules/timer_clock';
+import './modules/filter/filter';
+import './modules/count_cards/count_cards';
 
 import { urlJsonServer } from './modules/GlobalVariable';
 import inputEye from './modules/input_eye';
@@ -21,16 +23,26 @@ import generateCardsBestDeals from './modules/generateCards/generate_card_best_d
 import { changeDate } from './modules/timer_clock';
 import catalogcreatecard from './modules/catalog/catalogCreateCard';
 import productCreateCart from './modules/product/product_create_cart';
-import { dataGlobalJson } from './modules/GlobalVariable';
+import { dataGlobalJson, count_elements } from './modules/GlobalVariable';
 import searchCatalogCreateCard from './modules/catalog/searchCatalogCreateCard';
 import { getZapros, getZaprosFunction, transformData } from './modules/fetch/fetch';
 import convertObjectToInArray from './modules/function/convertObjectToInArray';
+import { getCountLocalStorage } from './modules/count_cards/count_cards';
+
+
+
+// http://trygonimetry.smm.zzz.com.ua/shop/filter-category=Електроніка/filter-category=Гаджети/filter-category=Гаджети/
+
 const hoverMainMenu = document.querySelector('.hover_maim_menu');
-const body = document.querySelector('body');
+// const body = document.querySelector('body');
+const body = document.body;
+// let categoryList = {};
 // console.log(hoverMainMenu)
 
 body.addEventListener('click', (e) => {
     const targetElement = e.target
+    const catalogLink = targetElement.closest('.data-catalog-level');
+
     // console.log(targetElement);
 
     // e.stopPropagation();
@@ -101,17 +113,16 @@ body.addEventListener('click', (e) => {
     //     addRemoveClass('.input_change_time', 'remove', 'hidden');
     //     document.querySelector('.input_change_time').addEventListener('change', e => changeDate(e));
     // }
-    else if (targetElement.closest('.data-catalog-level')) { //При кліку на  підменю в каталозі При кліку на меню breadcrumbs
-        const tempLink = targetElement.closest('.data-catalog-level');
-        // console.log('KLIC data-catalog-level')
-
-        if (tempLink) {
-            sessionStorage.setItem('catalog_00', tempLink.dataset.catalog_00);
-            sessionStorage.setItem('catalog_01', tempLink.dataset.catalog_01);
-            sessionStorage.setItem('catalog_02', tempLink.dataset.catalog_02);
-            sessionStorage.setItem('levelCatalog', tempLink.dataset.level_catalog);
-            sessionStorage.setItem('product_id', tempLink.dataset.id);
-            // tempLink.preventDefault();
+    else if (catalogLink) { //При кліку на  підменю в каталозі При кліку на меню breadcrumbs
+        console.log('KLIC data-catalog-level')
+        if (catalogLink) {
+            sessionStorage.setItem('catalogs', catalogLink.dataset.catalogs);
+            // sessionStorage.setItem('catalog_00', catalogLink.dataset.catalog_00);
+            // sessionStorage.setItem('catalog_01', catalogLink.dataset.catalog_01);
+            // sessionStorage.setItem('catalog_02', catalogLink.dataset.catalog_02);
+            sessionStorage.setItem('levelCatalog', catalogLink.dataset.level_catalog);
+            sessionStorage.setItem('product_id', catalogLink.dataset.id);
+            // catalogLink.preventDefault();
             // catalogcreatecard(Number(levelCatalog), [catalog_00, catalog_01, catalog_02], );
         }
     }
@@ -122,29 +133,35 @@ body.addEventListener('click', (e) => {
 
 
 
-async function aa() {
+async function start() {
+    let categoryList = await getZapros(urlJsonServer + 'shop_category/');
+    categoryList = JSON.parse(categoryList[0].category)[0];
+    console.log(categoryList);
 
-    if (window.location.pathname.includes('/index.html')) {
-        sessionStorage.setItem('catalog_00', '');
-        sessionStorage.setItem('catalog_01', '');
-        sessionStorage.setItem('catalog_02', '');
-        sessionStorage.setItem('levelCatalog', '');
-        sessionStorage.setItem('product_id', '');
+    console.log(window.location.pathname.length);
+    //Якщо голловна сторінка
+    if (window.location.pathname.includes('/index.html') || window.location.pathname.length === 1) {
 
+        // sessionStorage.setItem('catalog_00', '');
+        // sessionStorage.setItem('catalog_01', '');
+        // sessionStorage.setItem('catalog_02', '');
+        // sessionStorage.setItem('levelCatalog', '');
+        // sessionStorage.setItem('product_id', '');
         // let ooo = transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Гаджети']))
         // console.log(ooo)
-        generateCards(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Гаджети'])), '.arrivals__cards .cards', 6);
-        generateCards(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'])), '.easy_monthly .cards', 8);
-        generateCards(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Смартфони'])), '.on_sale .cards', 8);
-        generateCards(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'])), '.top_rated .cards', 8);
 
-        generateCardsBestDeals(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Гаджети'])), '.kitchen_appliances .bestdeals_main-cards ', 1);
-        generateCardsBestDeals(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'])), '.consoles .bestdeals_main-cards', 1);
-        generateCardsBestDeals(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Смартфони'])), '.tv_video .bestdeals_main-cards', 1);
-        generateCardsBestDeals(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'])), '.cell_phones .bestdeals_main-cards', 1);
-        generateCardsBestDeals(transformData(await getZapros(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Гаджети'])), '.grocery .bestdeals_main-cards', 1);
+        generateCards(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Гаджети'], 'rand()', 'limit=6')), '.arrivals__cards .cards');
+        generateCards(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], 'rand()', 'limit=8')), '.easy_monthly .cards');
+        generateCards(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Смартфони'], 'rand()', 'limit=8')), '.on_sale .cards');
+        generateCards(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], 'rand()', 'limit=8')), '.top_rated .cards');
 
-        // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Гаджети'], generateCards, '.arrivals__cards .cards', 6)
+        generateCardsBestDeals(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Гаджети'], 'rand()', 'limit=5')), '.kitchen_appliances .bestdeals_main-cards');
+        generateCardsBestDeals(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], 'rand()', 'limit=5')), '.consoles .bestdeals_main-cards');
+        generateCardsBestDeals(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Смартфони'], 'rand()', 'limit=5')), '.tv_video .bestdeals_main-cards');
+        generateCardsBestDeals(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], 'rand()', 'limit=5')), '.cell_phones .bestdeals_main-cards');
+        generateCardsBestDeals(transformData(await getZapros(urlJsonServer + 'shop/', 'category', ['Електроніка', 'Гаджети', 'Гаджети'], 'rand()', 'limit=5')), '.grocery .bestdeals_main-cards');
+
+        getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Гаджети'], generateCards, '.arrivals__cards .cards', 6)
         // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], generateCards, '.easy_monthly .cards', 8)
         // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Смартфони'], generateCards, '.on_sale .cards', 8);
         // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], generateCards, '.top_rated .cards', 8)
@@ -154,47 +171,64 @@ async function aa() {
         // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Компютери'], generateCardsBestDeals, '.tv_video .bestdeals_main-cards', 1)
         // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Смартфони'], generateCardsBestDeals, '.cell_phones .bestdeals_main-cards', 1)
         // getZaprosFunction(urlJsonServer, 'category', ['Електроніка', 'Гаджети', 'Ноутбуки'], generateCardsBestDeals, '.grocery .bestdeals_main-cards', 1)
-        setTimeout(() => {
-            stratLocalStorage('.cart_list__cart', 'cart');
-            stratLocalStorage('.cart_list__likes', 'likes')
-                , 2000
-        });
+
+        stratLocalStorage('.cart_list__cart', 'cart');
+        stratLocalStorage('.cart_list__likes', 'likes');
+        // getCountLocalStorage();
+        // setTimeout(() => {
+        //     // stratLocalStorage('.cart_list__cart', 'cart');
+        //     // stratLocalStorage('.cart_list__likes', 'likes')
+        //     console.log('22222')
+
+        //         
+        // }, 2000);
+        //Якщо не головні сторінки 
+
     } else {
-        setTimeout(() => {
-            stratLocalStorage('.cart_list__cart', 'cart');
-            stratLocalStorage('.cart_list__likes', 'likes')
-                , 2000
-        });
-        let levelCatalog = Number(sessionStorage.getItem('levelCatalog'));
-        let catalog_00 = sessionStorage.getItem('catalog_00');
-        let catalog_01 = sessionStorage.getItem('catalog_01');
-        let catalog_02 = sessionStorage.getItem('catalog_02');
+
+        const LEVEL_CATALOG = Number(sessionStorage.getItem('levelCatalog'));
+        let catalogs = sessionStorage.getItem('catalogs').split(' ');
+        if (catalogs[0] === 'undefined') catalogs = [];
         let product_id = sessionStorage.getItem('product_id');
 
-        // console.log(catalog_00)
-        // console.log(levelCatalog)
-        // if (catalog_00 && levelCatalog) {
-        console.log(catalog_00)
-        console.log(catalog_01)
-        console.log(catalog_02)
-        console.log(levelCatalog)
-        // sessionStorage.setItem('catalog_00', '');
-        // sessionStorage.setItem('levelCatalog', '');
-        if (levelCatalog === 1 || levelCatalog === 2 || levelCatalog === 3 || levelCatalog === 100) {
-            catalogcreatecard(levelCatalog, [catalog_00, catalog_01, catalog_02]);
+        // console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
+        // console.log(catalogs);
+        // console.log('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN')
+        // console.log(LEVEL_CATALOG);
+
+        //Якщо головний каталог або підкаталоги
+        if (LEVEL_CATALOG >= 0 || LEVEL_CATALOG <= 100) {
+            await catalogcreatecard(LEVEL_CATALOG, catalogs, categoryList);
         }
 
-        if (levelCatalog === 1000) {
-            productCreateCart([catalog_00, catalog_01, catalog_02], product_id);
+        //Якщо карточка товару
+        if (LEVEL_CATALOG === 1000) {
+            await productCreateCart(catalogs, product_id);
         }
-        // }
+
+        stratLocalStorage('.cart_list__cart', 'cart');
+        stratLocalStorage('.cart_list__likes', 'likes');
+        // getCountLocalStorage();
     }
 }
 
-aa();
-// transformData(await getZapros(urlJsonServer));
+// fetch('http://trygonimetry.smm.zzz.com.ua/shop/filter-category=Електроніка/limit=5/rand()')
+//     .then(rez => rez.json())
+//     .then(data => console.log(data))
+
+// fetch('http://trygonimetry.smm.zzz.com.ua/shop/filter-category=Електроніка/limit=20/rand()')
+//     .then(rez => rez.json())
+//     .then(data => console.log(data))
+
+// fetch('http://trygonimetry.smm.zzz.com.ua/shop/filter-category=Електроніка/limit=5/rand()')
+//     .then(rez => rez.json())
+//     .then(data => console.log(data))
 
 
+start();
+// const rezakt = await getZapros(urlJsonServer);
+
+// console.log(await getZapros(urlJsonServer))
 
 // fetch(`http://trygonimetry.smm.zzz.com.ua/shop`)
 // fetch(`${urlJsonServer}`)
@@ -224,7 +258,7 @@ aa();
 //             sessionStorage.setItem('catalog_00', '');
 //             sessionStorage.setItem('catalog_01', '');
 //             sessionStorage.setItem('catalog_02', '');
-//             sessionStorage.setItem('levelCatalog', '');
+//             sessionStorage.setItem('LEVEL_CATALOG', '');
 //             sessionStorage.setItem('product_id', '');
 //             // generateCards(dataGlobalJson.Електроніка.Гаджети.Компютери, '.arrivals__cards .cards', 6);
 //             // generateCards(dataGlobalJson.Електроніка.Гаджети.Ноутбуки, '.easy_monthly .cards', 8);
@@ -247,26 +281,26 @@ aa();
 //                 stratLocalStorage('.cart_list__likes', 'likes')
 //                     , 2000
 //             });
-//             let levelCatalog = Number(sessionStorage.getItem('levelCatalog'));
+//             let LEVEL_CATALOG = Number(sessionStorage.getItem('LEVEL_CATALOG'));
 //             let catalog_00 = sessionStorage.getItem('catalog_00');
 //             let catalog_01 = sessionStorage.getItem('catalog_01');
 //             let catalog_02 = sessionStorage.getItem('catalog_02');
 //             let product_id = sessionStorage.getItem('product_id');
 
 //             // console.log(catalog_00)
-//             // console.log(levelCatalog)
-//             // if (catalog_00 && levelCatalog) {
+//             // console.log(LEVEL_CATALOG)
+//             // if (catalog_00 && LEVEL_CATALOG) {
 //             console.log(catalog_00)
 //             console.log(catalog_01)
 //             console.log(catalog_02)
-//             console.log(levelCatalog)
+//             console.log(LEVEL_CATALOG)
 //             // sessionStorage.setItem('catalog_00', '');
-//             // sessionStorage.setItem('levelCatalog', '');
-//             if (levelCatalog === 1 || levelCatalog === 2 || levelCatalog === 3 || levelCatalog === 100) {
-//                 catalogcreatecard(levelCatalog, [catalog_00, catalog_01, catalog_02]);
+//             // sessionStorage.setItem('LEVEL_CATALOG', '');
+//             if (LEVEL_CATALOG === 1 || LEVEL_CATALOG === 2 || LEVEL_CATALOG === 3 || LEVEL_CATALOG === 100) {
+//                 catalogcreatecard(LEVEL_CATALOG, [catalog_00, catalog_01, catalog_02]);
 //             }
 
-//             if (levelCatalog === 1000) {
+//             if (LEVEL_CATALOG === 1000) {
 //                 productCreateCart([catalog_00, catalog_01, catalog_02], product_id);
 //             }
 //             // }
@@ -293,7 +327,6 @@ if (mainSearch) {
         if (!!searchText) {
             addRemoveClass('.search-product__on', 'remove', 'hidden');
             addRemoveClass('.search-product__off', 'add', 'hidden');
-
             searchCatalogCreateCard(searchText, dataGlobalJson);
             console.log(searchText);
             // console.log(dataGlobalJson);

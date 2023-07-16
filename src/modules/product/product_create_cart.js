@@ -4,24 +4,28 @@ import printElementHtml from '../function/printElementHtml';
 import { startSlider } from '../slider';
 import { getZapros, transformData } from '../fetch/fetch';
 async function productCreateCart(catalogs, product_id) {
+    console.log(product_id)
     //Робимо запит в базу даних
     // fetch(`http://trygonimetry.smm.zzz.com.ua/shop`)
     //     // fetch(`${urlJsonServer}`)
     //     .then(response => response.json())
     //     .then(data => {
     // console.log(product_id)
-    let product = transformData(await getZapros(urlJsonServer, 'id', [product_id]));
-    // console.log(product[0])
+    let product = transformData(await getZapros(urlJsonServer + 'shop/', '', [product_id]));
+    console.log(product[0])
     product = Object.assign({}, product[0]);
     printBreadCrumbs(1000, catalogs);
-    // const product = data[catalogs[0]][catalogs[1]][catalogs[2]].find(e => e.id == product_id);
-    // console.log(product);
+
+
     const productAboutMain = document.querySelector('.product_about-main.collect_data');
     if (productAboutMain) {
         productAboutMain.dataset.id = product.id;
-        productAboutMain.dataset.catalog_00 = product.catalog[0];
-        productAboutMain.dataset.catalog_01 = product.catalog[1];
-        productAboutMain.dataset.catalog_02 = product.catalog[2];
+        console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC');
+        console.log(product.category);
+        // productAboutMain.dataset.catalog = product.catalog;
+        productAboutMain.dataset.catalogs = product.category;
+        // productAboutMain.dataset.catalog_01 = product.catalog[1];
+        // productAboutMain.dataset.catalog_02 = product.catalog[2];
     }
 
     const nameProduct = document.querySelector('.product_top h1');

@@ -204,4 +204,10 @@
     }
 
     .catalog_product-pagination__item {}
+
+    &-rating-sales {
+        display: flex;
+        justify-content: space-between;
+        color: black;
+    }
 }

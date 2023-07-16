@@ -68,7 +68,30 @@
     }
 
 
-    .catalog_wrapper {
-        display: flex;
+    .catalog_products__bottom {
+        // display: flex;
+
+        &-sort_parent {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        &-sort {
+            width: 300px;
+            margin-right: 20px;
+            height: 50px;
+        }
+
+        &-count {
+            width: 300px;
+            margin-left: auto;
+            margin-right: 20px;
+            height: 50px;
+
+        }
+
+
     }
 }

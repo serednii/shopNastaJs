@@ -7,9 +7,9 @@ function generateCartsWinMart(data, clases, count) {
     for (let i = 0; i < count; i++) {
 
         const cartItemHTML = `   <li class="winmart_product collect_data data-click-card"  
-        data-catalog_00="${data[i].catalog[0]}" 
-        data-catalog_01="${data[i].catalog[1]}"  
-        data-catalog_02="${data[i].catalog[2]}" 
+ 
+        data-catalogs="${data[i].catalog}" 
+
         data-level_catalog="1000"
         data-id="${data[i].id}">
         <a href="${PRODUCTHTML}" class="winmart_product__link-img">
@@ -26,5 +26,7 @@ function generateCartsWinMart(data, clases, count) {
         if (cartListWrapper) cartListWrapper.insertAdjacentHTML('beforeend', cartItemHTML);
     }
 }
-
+// data-catalog_00="${data[i].catalog[0]}" 
+// data-catalog_01="${data[i].catalog[1]}"  
+// data-catalog_02="${data[i].catalog[2]}" 
 export default generateCartsWinMart;
